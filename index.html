@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<header>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+		<style>
+			body {
+				height: 100vh;
+				overflow: hidden;
+				background: linear-gradient(#fff, #999);
+			}
+			img {
+				position: absolute;
+				bottom: 50px;
+				width: 150px;
+				height: auto;
+				left: calc(50% - 75px);
+				transform: perspective(150px) rotateX(var(--x-angle)) rotateY(var(--y-angle));
+				filter: drop-shadow(0 0 5px rgba(0,0,0,.75));
+			}
+		</style>
+	</header>
+	<body>
+		<img src="etcetero.png" >
+		<script>
+			var element = document.querySelector('img')
+			refreshPosition = (x, y) => {
+				let invert = false
+				if (x > (document.documentElement.clientWidth/2)) {
+					x = document.documentElement.clientWidth - x
+					invert = true
+				}
+				let dx = (element.offsetLeft + (element.clientWidth/2)) - x
+				let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - element.offsetTop - element.clientHeight)) - y
+				let theta = Math.atan2(dy, dx)
+				theta *= 180 / Math.PI
+				let angle = (90 - theta) * 0.5
+				document.documentElement.style.setProperty('--x-angle', `${angle/2}deg`)
+				if (!invert) angle *= -1
+				document.documentElement.style.setProperty('--y-angle', `${angle}deg`)
+			}
+			window.onmousemove = e => {
+				refreshPosition(e.x, e.y)
+			}
+			window.ontouchmove = e => {
+				refreshPosition(e.x, e.y)
+			}
+		</script>
+	</body>
+	</html>
