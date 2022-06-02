@@ -21,7 +21,7 @@
 				overflow: hidden;
 				background: linear-gradient(#fff, #999);
 			}
-			img {
+			figure {
 				position: absolute;
 				bottom: calc(15px + env(safe-area-inset-bottom, 0));
 				width: 150px;
@@ -29,13 +29,63 @@
 				left: calc(50% - 75px);
 				transform: perspective(150px) rotateX(var(--x-angle)) rotateY(var(--y-angle));
 				filter: drop-shadow(0 0 5px rgba(0,0,0,.75));
+				z-index: 1;
+			}
+			figure img {
+				width: 100%;
+				height: auto;
+			}
+			figure:not(.talking):before {
+				visibility: hidden;
+			}
+			figure.talking:before {
+				visibility: visible;
+				animation: talk 250ms infinite;
+			}
+			figure:before {
+				content: "";
+				position: absolute;
+				display: inline-block;
+				top: 56%;
+				left: calc(50% - 8px);
+				width: 12px;
+				height: 0;
+				border-bottom-left-radius: 50%;
+				border-bottom-right-radius: 50%;
+				background-color: #fff;
+				border: 2px solid #46314d;
+				z-index: 2;
+			}
+			@keyframes talk {
+				0% {
+					width: 12px;
+					height: 0;
+					left: calc(50% - 8px);
+				}
+				25% {
+					width: 16px;
+					left: calc(50% - 10px);
+				}
+				50% {
+					width: 12px;
+					height: 7px;
+					left: calc(50% - 8px);
+				}
+				100% {
+					width: 16px;
+					height: 0;
+					left: calc(50% - 10px);
+				}
 			}
 		</style>
 	</header>
 	<body>
-		<img src="etcetero.png" >
+		<figure>
+			<img src="etcetero.png" >
+		</figure>
 		<script>
-			var element = document.querySelector('img')
+			var synth = new SpeechSynthesisUtterance()
+			var element = document.querySelector('figure')
 			refreshPosition = (x, y) => {
 				let invert = false
 				if (x > (document.documentElement.clientWidth/2)) {
@@ -57,6 +107,32 @@
 			window.ontouchmove = e => {
 				refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
 			}
+			element.onclick = e => {
+				fetch('http://metaphorpsum.com/paragraphs/1/3')
+				.then(response => {
+					response.text()
+					.then(text => {
+						synth.text = text
+						speechSynthesis.speak(synth)
+					})
+				})
+			}
+			synth.onstart = () => {
+				element.classList.add('talking')
+			}
+			synth.onend = () => {
+				element.classList.remove('talking')
+			}
+			synth.onerror = () => {
+				element.classList.remove('talking')
+			}
+			synth.onpause = () => {
+				element.classList.remove('talking')
+			}
+			window.onbeforeunload = () => {
+				speechSynthesis.cancel()
+			}
+			speechSynthesis.on
 		</script>
 	</body>
 	</html>
