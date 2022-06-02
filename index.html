@@ -34,6 +34,7 @@
 				width: 100%;
 				height: auto;
 				cursor: pointer;
+				-webkit-user-drag: none;
 			}
 			figure:not(.talking):before {
 				visibility: hidden;
@@ -112,6 +113,7 @@
 				.then(response => {
 					response.text()
 					.then(text => {
+						speechSynthesis.getVoices()
 						synth.text = text
 						speechSynthesis.speak(synth)
 					})
