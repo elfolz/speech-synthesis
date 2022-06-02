@@ -12,6 +12,9 @@
 		<meta property="og:description" content="ETcétero mouse follower.">
 		<meta name="description" content="ETcétero mouse follower.">
 		<style>
+			html {
+				overflow: hidden;
+			}
 			body {
 				margin: 0;
 				height: 100vh;
@@ -20,7 +23,7 @@
 			}
 			img {
 				position: absolute;
-				bottom: 50px;
+				bottom: calc(15px + env(safe-area-inset-bottom, 0));
 				width: 150px;
 				height: auto;
 				left: calc(50% - 75px);
