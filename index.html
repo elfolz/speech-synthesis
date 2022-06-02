@@ -117,6 +117,9 @@
 						synth.text = text
 						speechSynthesis.speak(synth)
 					})
+					.catch(error => {
+						console.log(error)
+					})
 				})
 			}
 			synth.onstart = () => {
