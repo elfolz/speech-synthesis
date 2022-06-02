@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 		<style>
 			body {
+				margin: 0;
 				height: 100vh;
 				overflow: hidden;
 				background: linear-gradient(#fff, #999);
@@ -43,7 +44,7 @@
 				refreshPosition(e.x, e.y)
 			}
 			window.ontouchmove = e => {
-				refreshPosition(e.x, e.y)
+				refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
 			}
 		</script>
 	</body>
