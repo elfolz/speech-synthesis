@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 	<header>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
@@ -12,6 +12,9 @@
 		<meta property="og:description" content="The Chatty ET">
 		<meta name="description" content="The Chatty ET">
 		<style>
+			*:focus {
+				outline: none;
+			}
 			html {
 				overflow: hidden;
 			}
@@ -113,7 +116,8 @@
 				.then(response => {
 					response.text()
 					.then(text => {
-						speechSynthesis.getVoices()
+						let voices = speechSynthesis.getVoices().filter(el => el.lang == 'en-US')
+						synth.voice = voices[1] ?? voices[0]
 						synth.text = text
 						speechSynthesis.speak(synth)
 					})
