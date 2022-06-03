@@ -51,7 +51,7 @@ figure:before {
 	z-index: 2;
 }
 figure:not(.speaking) {
-	transition: opacity 250ms ease-in-out;
+	transition: opacity 500ms ease-in-out;
 }
 figure:not(.speaking):before {
 	transition: all 100ms;
@@ -103,11 +103,12 @@ figure.u:before {
 }
 figure.speaking:before {
 	background-color: #fff !important;
-	animation: speaking 1s infinite;
+	animation: speaking 500ms infinite;
 }
 @keyframes speaking {
 	0% {
 		top: calc(var(--mouth-top) - calc(var(--mouth-size) * 0.75 / 2));
+		left: calc(50% - calc(var(--mouth-size) / 2));
 		width: var(--mouth-size);
 		height: calc(var(--mouth-size) * 0.75);
 		border-top-left-radius: 50%;
@@ -117,14 +118,23 @@ figure.speaking:before {
 	}
 	50% {
 		top: calc(var(--mouth-top) - calc(var(--mouth-size) / 4));
+		left: calc(50% - calc(var(--mouth-size) / 2));
 		width: var(--mouth-size);
 		height: calc(var(--mouth-size) / 2);
 		border-radius: 25%;
 	}
 	75% {
 		top: calc(var(--mouth-top) - calc(var(--mouth-size) / 2));
+		left: calc(50% - calc(var(--mouth-size) / 2));
 		width: var(--mouth-size);
 		height: var(--mouth-size);
+		border-radius: 50%;
+	}
+	100% {
+		top: calc(var(--mouth-top) - calc(var(--mouth-size) / 6));
+		left: calc(50% - calc(var(--mouth-size) / 6));
+		width: calc(var(--mouth-size) / 3);
+		height: calc(var(--mouth-size) / 3);
 		border-radius: 50%;
 	}
 }
