@@ -1,14 +1,15 @@
+var isCat = false
 var audioEnabled = false
 var synth = new SpeechSynthesisUtterance()
-var et = document.querySelector('figure')
+var persona = document.querySelector('figure')
 function refreshPosition(x, y) {
 	let invert = false
 	if (x > (document.documentElement.clientWidth / 2)) {
 		x = document.documentElement.clientWidth - x
 		invert = true
 	}
-	let dx = (et.offsetLeft + (et.clientWidth / 2)) - x
-	let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - et.offsetTop - et.clientHeight)) - y
+	let dx = (persona.offsetLeft + (persona.clientWidth / 2)) - x
+	let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - persona.offsetTop - persona.clientHeight)) - y
 	let theta = Math.atan2(dy, dx)
 	theta *= 180 / Math.PI
 	let angle = (90 - theta) * 0.5
@@ -17,9 +18,25 @@ function refreshPosition(x, y) {
 	document.documentElement.style.setProperty('--y-angle', `${angle}deg`)
 }
 document.onreadystatechange = () => {
-	if (document.readyState == 'complete') resize()
+	if (document.readyState != 'complete') return
+	let params = new URLSearchParams(location.search.substring(1))
+	if (params.get('cat')) {
+		persona.classList.add('cat')
+		persona.style.setProperty('--mouth-top', '39%')
+		persona.style.setProperty('--lips-color', '#aaa671')
+		persona.children[0].src = 'cat-body.png'
+		let nose = document.createElement('img')
+		nose.src = 'cat-nose.png'
+		nose.style.setProperty('position', 'absolute')
+		nose.style.setProperty('left', 0)
+		nose.style.setProperty('z-index', 3)
+		persona.appendChild(nose)
+		isCat = true
+	}
+	persona.classList.add('show')
+	resize()
 }
-et.onclick = e => {
+persona.onclick = e => {
 	fetch('https://litipsum.com/api/dracula/1')
 		.then(response => {
 			response.text()
@@ -51,29 +68,33 @@ function setupVoice(text) {
 	synth.lang = synth.voice?.lang ?? 'en-US'
 	synth.voice = voice
 	synth.text = text
+	if (isCat) {
+		synth.rate = 1.5
+		synth.pitch = 2
+	}
 	speechSynthesis.speak(synth)
 }
 synth.onboundary = e => {
 	let vowel = e?.utterance?.text?.substr(e?.charIndex)?.match(/[aeiou]/)
-	if (vowel) et.classList.add(vowel[0])
-	setTimeout(() => et.classList.remove(vowel[0]), 250)
+	if (vowel) persona.classList.add(vowel[0])
+	setTimeout(() => persona.classList.remove(vowel[0]), 250)
 }
 synth.onstart = () => {
 	if (/edg/i.test(navigator.appVersion) && (/windows/i.test(navigator.appVersion) || /android/i.test(navigator.appVersion)) ) return
-	et.classList.add('speaking')
+	persona.classList.add('speaking')
 }
 synth.onresume = () => {
 	if (/edg/i.test(navigator.appVersion) && (/windows/i.test(navigator.appVersion) || /android/i.test(navigator.appVersion)) ) return
-	et.classList.add('speaking')
+	persona.classList.add('speaking')
 }
 synth.onend = () => {
-	et.classList.remove('speaking')
+	persona.classList.remove('speaking')
 }
 synth.onpause = () => {
-	et.classList.remove('speaking')
+	persona.classList.remove('speaking')
 }
 synth.onerror = () => {
-	et.classList.remove('speaking')
+	persona.classList.remove('speaking')
 }
 window.onmousemove = e => {
 	refreshPosition(e.pageX, e.pageY)
@@ -89,7 +110,7 @@ window.onresize = () => {
 }
 document.onclick = () => {
 	speechSynthesis.cancel()
-	et.classList.remove('speaking')
+	persona.classList.remove('speaking')
 	if (audioEnabled) return
 	synth.text = ''
 	synth.volume = 0
