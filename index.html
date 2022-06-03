@@ -90,7 +90,7 @@
 		<script>
 			var synth = new SpeechSynthesisUtterance()
 			var element = document.querySelector('figure')
-			refreshPosition = (x, y) => {
+			function refreshPosition(x, y) {
 				let invert = false
 				if (x > (document.documentElement.clientWidth/2)) {
 					x = document.documentElement.clientWidth - x
@@ -105,43 +105,57 @@
 				if (!invert) angle *= -1
 				document.documentElement.style.setProperty('--y-angle', `${angle}deg`)
 			}
+			element.onclick = e => {
+				e.stopPropagation()
+				fetch('https://litipsum.com/api/dracula/1')
+				.then(response => {
+					response.text()
+					.then(text => {
+						setupVoice(text)
+					})
+					.catch(error => {
+						alert(error ?? 'Error')
+					})
+				})
+			}
+			function setupVoice(text) {
+				let voices = speechSynthesis.getVoices().filter(el => ['en-US', 'en_US'].includes(el.lang))
+				if (!voices.length) {
+					setTimeout(() => setupVoice(text), 250)
+					return
+				}
+				if (navigator.platform == 'iPhone') {
+					synth.voice = voices[0]
+				} else {
+					synth.voice = voices[1] ?? voices[0]
+				}
+				synth.lang = 'en-US'
+				synth.text = text
+				speechSynthesis.speak(synth)
+			}
+			synth.onstart = e => {
+				element.classList.add('talking')
+			}
+			synth.onend = e => {
+				element.classList.remove('talking')
+			}
+			synth.onerror = e => {
+				alert(e ?? 'Error')
+				element.classList.remove('talking')
+			}
+			synth.onpause = e => {
+				element.classList.remove('talking')
+			}
 			window.onmousemove = e => {
 				refreshPosition(e.x, e.y)
 			}
 			window.ontouchmove = e => {
 				refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
 			}
-			element.onclick = e => {
-				fetch('https://litipsum.com/api/dracula/1')
-				.then(response => {
-					response.text()
-					.then(text => {
-						let voices = speechSynthesis.getVoices().filter(el => el.lang == 'en-US')
-						synth.voice = voices[1] ?? voices[0]
-						synth.text = text
-						speechSynthesis.speak(synth)
-					})
-					.catch(error => {
-						console.log(error)
-					})
-				})
-			}
-			synth.onstart = () => {
-				element.classList.add('talking')
-			}
-			synth.onend = () => {
-				element.classList.remove('talking')
-			}
-			synth.onerror = () => {
-				element.classList.remove('talking')
-			}
-			synth.onpause = () => {
-				element.classList.remove('talking')
-			}
-			window.onbeforeunload = () => {
+			window.onpagehide = () => {
 				speechSynthesis.cancel()
 			}
-			window.onclick = () => {
+			window.onclick = e => {
 				speechSynthesis.cancel()
 			}
 		</script>
