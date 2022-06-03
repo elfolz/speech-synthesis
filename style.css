@@ -1,0 +1,125 @@
+* {
+	box-sizing: border-box;
+}
+*:focus {
+	outline: none;
+}
+html {
+	overflow: hidden;
+}
+body {
+	margin: 0;
+	overflow: hidden;
+}
+figure {
+	position: absolute;
+	bottom: calc(calc(var(--size) / 4) + env(safe-area-inset-bottom, 0));
+	width: var(--size);
+	height: auto;
+	left: calc(50% - (var(--size) / 2));
+	transform: perspective(var(--size)) rotateX(var(--x-angle)) rotateY(var(--y-angle));
+	filter: drop-shadow(0 0 5px rgba(0, 0, 0, .75));
+	margin: 0;
+	z-index: 1;
+}
+figure img {
+	width: 100%;
+	height: auto;
+	cursor: pointer;
+	-webkit-user-drag: none;
+}
+figure:before {
+	content: "";
+	display: inline-block;
+	position: absolute;
+	left: calc(50% - calc(var(--mouth-size) / 2));
+	background-color: #fff;
+	border-color: #46314d;
+	border-style: solid;
+	transition: all 100ms;
+	will-change: width, height;
+	box-sizing: border-box;
+	z-index: 2;
+}
+figure:not(.a):not(.e):not(.i):not(.o):not(.u):before {
+	top: 58%;
+	width: var(--mouth-size);
+	height: 2px;
+	border-radius: 50%;
+	background-color: #46314d;
+	left: calc(50% - calc(var(--mouth-size) / 2));
+}
+figure.a:before {
+	top: calc(58% - calc(var(--mouth-size) * 0.75 / 2));
+	width: var(--mouth-size);
+	height: calc(var(--mouth-size) * 0.75);
+	border-top-left-radius: 50%;
+	border-top-right-radius: 50%;
+	border-bottom-left-radius: 25%;
+	border-bottom-right-radius: 25%;
+}
+figure.e:before {
+	top: calc(58% - calc(var(--mouth-size) * 0.75 / 2));
+	width: var(--mouth-size);
+	height: calc(var(--mouth-size) * 0.75);
+	border-bottom-left-radius: 50%;
+	border-bottom-right-radius: 50%;
+	border-top-left-radius: 25%;
+	border-top-right-radius: 25%;
+}
+figure.i:before {
+	top: calc(58% - calc(var(--mouth-size) / 4));
+	width: var(--mouth-size);
+	height: calc(var(--mouth-size) / 2);
+	border-radius: 25%;
+}
+figure.o:before {
+	top: calc(58% - calc(var(--mouth-size) / 2));
+	width: var(--mouth-size);
+	height: var(--mouth-size);
+	border-radius: 50%;
+}
+figure.u:before {
+	top: calc(58% - calc(var(--mouth-size) / 6));
+	left: calc(50% - calc(var(--mouth-size) / 6));
+	width: calc(var(--mouth-size) / 3);
+	height: calc(var(--mouth-size) / 3);
+	border-radius: 50%;
+}
+figure.speaking:before {
+	background-color: #fff !important;
+	animation: speaking 1s infinite;
+}
+@keyframes speaking {
+	25% {
+		top: calc(58% - calc(var(--mouth-size) * 0.75 / 2));
+		width: var(--mouth-size);
+		height: calc(var(--mouth-size) * 0.75);
+		border-top-left-radius: 50%;
+		border-top-right-radius: 50%;
+		border-bottom-left-radius: 25%;
+		border-bottom-right-radius: 25%;
+	}
+	50% {
+		top: calc(58% - calc(var(--mouth-size) / 4));
+		width: var(--mouth-size);
+		height: calc(var(--mouth-size) / 2);
+		border-radius: 25%;
+	}
+	100% {
+		top: calc(58% - calc(var(--mouth-size) / 2));
+		width: var(--mouth-size);
+		height: var(--mouth-size);
+		border-radius: 50%;
+	}
+}
+@media screen and (min-width: 481px) {
+	figure:before {
+		border-width: 4px;
+	}
+}
+@media screen and (max-width: 480px) {
+	figure:before {
+		border-width: 2px;
+	}
+}

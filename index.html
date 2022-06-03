@@ -2,7 +2,8 @@
 <html lang="en-US">
 	<header>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 		<meta property="og:url" content="https://et7ro.github.io/ETgarela" />
 		<meta property="og:title" content="The Chatty ET">
 		<meta property="og:image" content="https://et7ro.github.io/ETgarela/etcetero.png">
@@ -11,154 +12,12 @@
 		<meta property="og:image:height" content="512" />
 		<meta property="og:description" content="The Chatty ET">
 		<meta name="description" content="The Chatty ET">
-		<style>
-			*:focus {
-				outline: none;
-			}
-			html {
-				overflow: hidden;
-			}
-			body {
-				margin: 0;
-				overflow: hidden;
-			}
-			figure {
-				position: absolute;
-				bottom: calc(15px + env(safe-area-inset-bottom, 0));
-				width: 150px;
-				height: auto;
-				left: calc(50% - 75px);
-				transform: perspective(150px) rotateX(var(--x-angle)) rotateY(var(--y-angle));
-				filter: drop-shadow(0 0 5px rgba(0,0,0,.75));
-				margin: 0;
-				z-index: 1;
-			}
-			figure img {
-				width: 100%;
-				height: auto;
-				cursor: pointer;
-				-webkit-user-drag: none;
-			}
-			figure:not(.talking):before {
-				visibility: hidden;
-			}
-			figure.talking:before {
-				visibility: visible;
-				animation: talk 250ms infinite;
-			}
-			figure:before {
-				content: "";
-				position: absolute;
-				display: inline-block;
-				top: 56%;
-				left: calc(50% - 8px);
-				width: 12px;
-				height: 0;
-				border-bottom-left-radius: 50%;
-				border-bottom-right-radius: 50%;
-				background-color: #fff;
-				border: 2px solid #46314d;
-				z-index: 2;
-			}
-			@keyframes talk {
-				0% {
-					width: 12px;
-					height: 0;
-					left: calc(50% - 8px);
-				}
-				25% {
-					width: 16px;
-					left: calc(50% - 10px);
-				}
-				50% {
-					width: 12px;
-					height: 7px;
-					left: calc(50% - 8px);
-				}
-				100% {
-					width: 16px;
-					height: 0;
-					left: calc(50% - 10px);
-				}
-			}
-		</style>
+		<link rel="stylesheet" href="style.css">
 	</header>
 	<body>
 		<figure>
-			<img src="etcetero.png" >
+			<img src="etcetero.png">
 		</figure>
-		<script>
-			var synth = new SpeechSynthesisUtterance()
-			var element = document.querySelector('figure')
-			function refreshPosition(x, y) {
-				let invert = false
-				if (x > (document.documentElement.clientWidth/2)) {
-					x = document.documentElement.clientWidth - x
-					invert = true
-				}
-				let dx = (element.offsetLeft + (element.clientWidth/2)) - x
-				let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - element.offsetTop - element.clientHeight)) - y
-				let theta = Math.atan2(dy, dx)
-				theta *= 180 / Math.PI
-				let angle = (90 - theta) * 0.5
-				document.documentElement.style.setProperty('--x-angle', `${angle/2}deg`)
-				if (!invert) angle *= -1
-				document.documentElement.style.setProperty('--y-angle', `${angle}deg`)
-			}
-			element.onclick = e => {
-				e.stopPropagation()
-				fetch('https://litipsum.com/api/dracula/1')
-				.then(response => {
-					response.text()
-					.then(text => {
-						setupVoice(text)
-					})
-					.catch(error => {
-						alert(error ?? 'Error')
-					})
-				})
-			}
-			function setupVoice(text) {
-				let voices = speechSynthesis.getVoices().filter(el => el.lang.replace('_', '-') == 'en-US')
-				if (!voices.length) {
-					setTimeout(() => setupVoice(text), 250)
-					return
-				}
-				if (navigator.platform == 'iPhone') {
-					synth.voice = voices[0]
-				} else {
-					synth.voice = voices[1] ?? voices[0]
-				}
-				synth.lang = synth.voice.lang
-				synth.text = text
-				speechSynthesis.cancel()
-				speechSynthesis.speak(synth)
-			}
-			synth.onstart = e => {
-				element.classList.add('talking')
-			}
-			synth.onend = e => {
-				element.classList.remove('talking')
-			}
-			synth.onerror = e => {
-				alert(e ?? 'Error')
-				element.classList.remove('talking')
-			}
-			synth.onpause = e => {
-				element.classList.remove('talking')
-			}
-			window.onmousemove = e => {
-				refreshPosition(e.x, e.y)
-			}
-			window.ontouchmove = e => {
-				refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
-			}
-			window.onpagehide = () => {
-				speechSynthesis.cancel()
-			}
-			window.onclick = e => {
-				speechSynthesis.cancel()
-			}
-		</script>
+		<script src="script.js"></script>
 	</body>
-	</html>
+</html>
