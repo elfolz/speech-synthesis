@@ -119,7 +119,7 @@
 				})
 			}
 			function setupVoice(text) {
-				let voices = speechSynthesis.getVoices().filter(el => ['en-US', 'en_US'].includes(el.lang))
+				let voices = speechSynthesis.getVoices().filter(el => el.lang.replace('_', '-') == 'en-US')
 				if (!voices.length) {
 					setTimeout(() => setupVoice(text), 250)
 					return
@@ -129,8 +129,9 @@
 				} else {
 					synth.voice = voices[1] ?? voices[0]
 				}
-				synth.lang = 'en-US'
+				synth.lang = synth.voice.lang
 				synth.text = text
+				speechSynthesis.cancel()
 				speechSynthesis.speak(synth)
 			}
 			synth.onstart = e => {
