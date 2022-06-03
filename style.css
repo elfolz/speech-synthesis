@@ -5,10 +5,13 @@
 	outline: none;
 }
 html {
-	overflow: hidden;
-}
-body {
-	margin: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: linear-gradient(#999, #121212);
+	background-color: #121212;
 	overflow: hidden;
 }
 figure {

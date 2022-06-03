@@ -3,12 +3,12 @@ var synth = new SpeechSynthesisUtterance()
 var et = document.querySelector('figure')
 function refreshPosition(x, y) {
 	let invert = false
-	if (x > (document.documentElement.clientWidth / 2)) {
-		x = document.documentElement.clientWidth - x
+	if (x > (document.body.clientWidth / 2)) {
+		x = document.body.clientWidth - x
 		invert = true
 	}
 	let dx = (et.offsetLeft + (et.clientWidth / 2)) - x
-	let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - et.offsetTop - et.clientHeight)) - y
+	let dy = (document.body.clientHeight - (document.body.clientHeight - et.offsetTop - et.clientHeight)) - y
 	let theta = Math.atan2(dy, dx)
 	theta *= 180 / Math.PI
 	let angle = (90 - theta) * 0.5
@@ -20,7 +20,6 @@ document.onreadystatechange = () => {
 	if (document.readyState == 'complete') resize()
 }
 et.onclick = e => {
-	e.preventDefault()
 	fetch('https://litipsum.com/api/dracula/1')
 		.then(response => {
 			response.text()
@@ -77,10 +76,9 @@ synth.onerror = () => {
 	et.classList.remove('speaking')
 }
 window.onmousemove = e => {
-	refreshPosition(e.x, e.y)
+	refreshPosition(e.pageX, e.pageY)
 }
 window.ontouchmove = e => {
-	e.preventDefault()
 	refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
 }
 window.onpagehide = () => {
