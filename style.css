@@ -36,10 +36,12 @@ figure:before {
 	background-color: #fff;
 	border-color: #46314d;
 	border-style: solid;
-	transition: all 100ms;
 	will-change: width, height;
 	box-sizing: border-box;
 	z-index: 2;
+}
+figure:not(.speaking):before {
+	transition: all 100ms;
 }
 figure:not(.a):not(.e):not(.i):not(.o):not(.u):before {
 	top: 58%;

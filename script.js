@@ -40,6 +40,7 @@ function resize() {
 	document.documentElement.style.setProperty('--mouth-size', `${mouthSize}px`)
 }
 function setupVoice(text) {
+	speechSynthesis.cancel()
 	let actors = ['Microsoft Mark', 'Microsoft Guy', 'Male']
 	if (/iphone|ipad|macos/i.test(navigator.appVersion)) actors.push('Daniel')
 	let voice = speechSynthesis.getVoices().find(el => {
@@ -51,7 +52,6 @@ function setupVoice(text) {
 	synth.lang = synth.voice?.lang ?? 'en-US'
 	synth.voice = voice
 	synth.text = text
-	speechSynthesis.cancel()
 	speechSynthesis.speak(synth)
 }
 synth.onboundary = e => {
@@ -63,12 +63,19 @@ synth.onstart = () => {
 	if (/edg/i.test(navigator.appVersion) && (/windows/i.test(navigator.appVersion) || /android/i.test(navigator.appVersion)) ) return
 	element.classList.add('speaking')
 }
+synth.onresume = () => {
+	if (/edg/i.test(navigator.appVersion) && (/windows/i.test(navigator.appVersion) || /android/i.test(navigator.appVersion)) ) return
+	element.classList.add('speaking')
+}
 synth.onend = () => {
 	element.classList.remove('speaking')
 }
-/* synth.onerror = e => {
-	alert(`Error: ${e}` ?? 'Error')
-} */
+synth.onpause = () => {
+	element.classList.remove('speaking')
+}
+synth.onerror = () => {
+	element.classList.remove('speaking')
+}
 window.onmousemove = e => {
 	refreshPosition(e.x, e.y)
 }
@@ -79,14 +86,12 @@ window.ontouchmove = e => {
 window.onpagehide = () => {
 	speechSynthesis.cancel()
 }
-window.onclick = e => {
-	speechSynthesis.cancel()
-}
 window.onresize = () => {
 	resize()
 }
 document.onclick = () => {
 	speechSynthesis.cancel()
+	element.classList.remove('speaking')
 	if (audioEnabled) return
 	synth.text = ''
 	synth.volume = 0
