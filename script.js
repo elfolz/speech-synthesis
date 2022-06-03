@@ -3,12 +3,12 @@ var synth = new SpeechSynthesisUtterance()
 var et = document.querySelector('figure')
 function refreshPosition(x, y) {
 	let invert = false
-	if (x > (document.body.clientWidth / 2)) {
-		x = document.body.clientWidth - x
+	if (x > (document.documentElement.clientWidth / 2)) {
+		x = document.documentElement.clientWidth - x
 		invert = true
 	}
 	let dx = (et.offsetLeft + (et.clientWidth / 2)) - x
-	let dy = (document.body.clientHeight - (document.body.clientHeight - et.offsetTop - et.clientHeight)) - y
+	let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - et.offsetTop - et.clientHeight)) - y
 	let theta = Math.atan2(dy, dx)
 	theta *= 180 / Math.PI
 	let angle = (90 - theta) * 0.5
@@ -32,7 +32,7 @@ et.onclick = e => {
 		})
 }
 function resize() {
-	let size = document.documentElement.clientWidth / 2
+	let size = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight) / 2
 	let mouthSize = Math.round(size * 0.08)
 	if (mouthSize % 2 != 0) mouthSize++
 	document.documentElement.style.setProperty('--size', `${size}px`)
