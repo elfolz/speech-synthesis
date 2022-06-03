@@ -91,7 +91,7 @@ figure.speaking:before {
 	animation: speaking 1s infinite;
 }
 @keyframes speaking {
-	25% {
+	0% {
 		top: calc(58% - calc(var(--mouth-size) * 0.75 / 2));
 		width: var(--mouth-size);
 		height: calc(var(--mouth-size) * 0.75);
@@ -106,7 +106,7 @@ figure.speaking:before {
 		height: calc(var(--mouth-size) / 2);
 		border-radius: 25%;
 	}
-	100% {
+	75% {
 		top: calc(58% - calc(var(--mouth-size) / 2));
 		width: var(--mouth-size);
 		height: var(--mouth-size);
