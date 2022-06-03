@@ -40,7 +40,7 @@ function resize() {
 }
 function setupVoice(text) {
 	speechSynthesis.cancel()
-	let actors = ['Microsoft Mark', 'Microsoft Guy', 'Male']
+	let actors = ['Microsoft Mark', 'Microsoft Guy', 'Google UK English Male']
 	if (/iphone|ipad|macos/i.test(navigator.appVersion)) actors.push('Daniel')
 	let voice = speechSynthesis.getVoices().find(el => {
 		let byName = new RegExp(`(${actors.join('|')})`, 'i').test(el.name.toLocaleLowerCase())
