@@ -1,5 +1,9 @@
 {
+	"name": "ETgarela",
 	"scripts": {
 		"serve": "http-server ./ -p 8080 -c-1"
+	},
+	"dependencies": {
+		"http-server": "^14.1.1"
 	}
 }
