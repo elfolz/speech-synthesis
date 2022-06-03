@@ -68,10 +68,7 @@ function setupVoice(text) {
 	synth.lang = synth.voice?.lang ?? 'en-US'
 	synth.voice = voice
 	synth.text = text
-	if (isCat) {
-		synth.rate = 1.5
-		synth.pitch = 2
-	}
+	if (isCat) synth.pitch = 2
 	speechSynthesis.speak(synth)
 }
 synth.onboundary = e => {
