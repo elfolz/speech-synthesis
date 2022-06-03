@@ -1,14 +1,14 @@
 var audioEnabled = false
 var synth = new SpeechSynthesisUtterance()
-var element = document.querySelector('figure')
+var et = document.querySelector('figure')
 function refreshPosition(x, y) {
 	let invert = false
 	if (x > (document.documentElement.clientWidth / 2)) {
 		x = document.documentElement.clientWidth - x
 		invert = true
 	}
-	let dx = (element.offsetLeft + (element.clientWidth / 2)) - x
-	let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - element.offsetTop - element.clientHeight)) - y
+	let dx = (et.offsetLeft + (et.clientWidth / 2)) - x
+	let dy = (document.documentElement.clientHeight - (document.documentElement.clientHeight - et.offsetTop - et.clientHeight)) - y
 	let theta = Math.atan2(dy, dx)
 	theta *= 180 / Math.PI
 	let angle = (90 - theta) * 0.5
@@ -19,7 +19,7 @@ function refreshPosition(x, y) {
 document.onreadystatechange = () => {
 	if (document.readyState == 'complete') resize()
 }
-element.onclick = e => {
+et.onclick = e => {
 	e.preventDefault()
 	fetch('https://litipsum.com/api/dracula/1')
 		.then(response => {
@@ -56,25 +56,25 @@ function setupVoice(text) {
 }
 synth.onboundary = e => {
 	let vowel = e?.utterance?.text?.substr(e?.charIndex)?.match(/[aeiou]/)
-	if (vowel) element.classList.add(vowel[0])
-	setTimeout(() => element.classList.remove(vowel[0]), 250)
+	if (vowel) et.classList.add(vowel[0])
+	setTimeout(() => et.classList.remove(vowel[0]), 250)
 }
 synth.onstart = () => {
 	if (/edg/i.test(navigator.appVersion) && (/windows/i.test(navigator.appVersion) || /android/i.test(navigator.appVersion)) ) return
-	element.classList.add('speaking')
+	et.classList.add('speaking')
 }
 synth.onresume = () => {
 	if (/edg/i.test(navigator.appVersion) && (/windows/i.test(navigator.appVersion) || /android/i.test(navigator.appVersion)) ) return
-	element.classList.add('speaking')
+	et.classList.add('speaking')
 }
 synth.onend = () => {
-	element.classList.remove('speaking')
+	et.classList.remove('speaking')
 }
 synth.onpause = () => {
-	element.classList.remove('speaking')
+	et.classList.remove('speaking')
 }
 synth.onerror = () => {
-	element.classList.remove('speaking')
+	et.classList.remove('speaking')
 }
 window.onmousemove = e => {
 	refreshPosition(e.x, e.y)
@@ -91,7 +91,7 @@ window.onresize = () => {
 }
 document.onclick = () => {
 	speechSynthesis.cancel()
-	element.classList.remove('speaking')
+	et.classList.remove('speaking')
 	if (audioEnabled) return
 	synth.text = ''
 	synth.volume = 0
