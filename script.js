@@ -3,9 +3,11 @@ var audioEnabled = false
 var synth = new SpeechSynthesisUtterance()
 var persona = document.querySelector('figure')
 function refreshPosition(x, y) {
+	let centerWidth = document.documentElement.clientWidth / 2
 	let marginBottom = (document.documentElement.clientHeight - (persona.offsetTop + persona.clientHeight)) / 2
 	let centerHeight = persona.offsetTop + (persona.clientHeight / 2) + marginBottom
-	let centerWidth = document.documentElement.clientWidth / 2
+	if (x < 0) x = centerWidth
+	if (y < 0) y = centerHeight
 	let posX = (y - centerHeight) / centerHeight
 	let posY = (x - centerWidth) / centerWidth
 	document.documentElement.style.setProperty('--x-angle', `${posX * 45}deg`)
@@ -33,15 +35,15 @@ document.onreadystatechange = () => {
 }
 persona.onclick = e => {
 	fetch('https://litipsum.com/api/dracula/1')
-		.then(response => {
-			response.text()
-				.then(text => {
-					setupVoice(text)
-				})
-				.catch(error => {
-					alert(error ?? 'Error')
-				})
-		})
+	.then(response => {
+		return response.text()
+	})
+	.then(response => {
+		setupVoice(response)
+	})
+	.catch(error => {
+		alert(error ?? 'Error')
+	})
 }
 function resize() {
 	let size = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight) / 2
@@ -86,13 +88,8 @@ synth.onpause = () => {
 	persona.classList.remove('speaking')
 }
 synth.onerror = () => {
+	speechSynthesis.cancel()
 	persona.classList.remove('speaking')
-}
-window.onmousemove = e => {
-	refreshPosition(e.pageX, e.pageY)
-}
-window.ontouchmove = e => {
-	refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
 }
 window.onpagehide = () => {
 	speechSynthesis.cancel()
@@ -100,7 +97,7 @@ window.onpagehide = () => {
 window.onresize = () => {
 	resize()
 }
-document.onclick = e => {
+document.onclick = () => {
 	speechSynthesis.cancel()
 	persona.classList.remove('speaking')
 	if (audioEnabled) return
@@ -109,4 +106,24 @@ document.onclick = e => {
 	speechSynthesis.speak(synth)
 	audioEnabled = true
 	synth.volume = 1
+}
+document.onmouseenter = () => {
+	persona.classList.remove('center')
+}
+document.onmouseleave = () => {
+	persona.classList.add('center')
+	refreshPosition(-1, -1)
+}
+document.onmousemove = e => {
+	refreshPosition(e.pageX, e.pageY)
+}
+document.ontouchstart = () => {
+	persona.classList.remove('center')
+}
+document.ontouchend = () => {
+	persona.classList.add('center')
+	refreshPosition(-1, -1)
+}
+document.ontouchmove = e => {
+	refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
 }

@@ -52,6 +52,10 @@ figure:before {
 }
 figure:not(.speaking) {
 	transition: opacity 500ms ease-in-out;
+	will-change: transform;
+}
+figure:not(.speaking).center {
+	transition: transform 500ms ease-in-out;
 }
 figure:not(.speaking):before {
 	transition: all 100ms;
