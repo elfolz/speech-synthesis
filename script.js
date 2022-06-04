@@ -3,7 +3,7 @@ var audioEnabled = false
 var synth = new SpeechSynthesisUtterance()
 var persona = document.querySelector('figure')
 function refreshPosition(x, y) {
-	let invert = false
+	/* let invert = false
 	if (x > (document.documentElement.clientWidth / 2)) {
 		x = document.documentElement.clientWidth - x
 		invert = true
@@ -15,7 +15,30 @@ function refreshPosition(x, y) {
 	let angle = (90 - theta) * 0.5
 	document.documentElement.style.setProperty('--x-angle', `${angle / 2}deg`)
 	if (!invert) angle *= -1
-	document.documentElement.style.setProperty('--y-angle', `${angle}deg`)
+	document.documentElement.style.setProperty('--y-angle', `${angle}deg`) */
+
+	/* const halfWidth = document.documentElement.clientWidth
+	const halfHeight = (document.documentElement.clientHeight - (document.documentElement.clientHeight - persona.offsetTop - persona.clientHeight))
+	const xCoeff = ((pageX || this.targetX) - halfWidth) / halfWidth;
+	const yCoeff = (halfHeight - (pageY || this.targetY)) / halfHeight; */
+	
+	let marginBottom = (document.documentElement.clientHeight - (persona.offsetTop + persona.clientHeight)) / 2
+	let centerHeight = persona.offsetTop + (persona.clientHeight / 2) + marginBottom
+	let centerWidth = document.documentElement.clientWidth / 2
+	let posX = (x - centerWidth) / centerWidth
+	let posY = (y - centerHeight) / centerHeight
+
+	let dy = (persona.offsetLeft + (persona.clientWidth / 2)) - posX
+	let dx = (persona.offsetTop + (persona.clientHeight / 2)) - posY
+	let theta = Math.atan2(dy, dx)
+	theta *= 180 / Math.PI
+
+	console.log(theta)
+
+	document.documentElement.style.setProperty('--x-angle', `${posX * 20}deg`)
+	document.documentElement.style.setProperty('--y-angle', `${posY * 20}deg`)
+	document.documentElement.style.setProperty('--z-angle', `${document.documentElement.clientWidth/20}px`)
+
 }
 document.onreadystatechange = () => {
 	if (document.readyState != 'complete') return
@@ -105,7 +128,7 @@ window.onpagehide = () => {
 window.onresize = () => {
 	resize()
 }
-document.onclick = () => {
+document.onclick = e => {
 	speechSynthesis.cancel()
 	persona.classList.remove('speaking')
 	if (audioEnabled) return

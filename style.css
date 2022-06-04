@@ -23,7 +23,7 @@ figure {
 	width: var(--size);
 	height: auto;
 	left: calc(50% - (var(--size) / 2));
-	transform: perspective(var(--size)) rotateX(var(--x-angle)) rotateY(var(--y-angle));
+	transform: rotateX(var(--x-angle)) rotateY(var(--y-angle)) translateZ(var(--z-angle));
 	filter: drop-shadow(0 0 5px rgba(0, 0, 0, .75));
 	margin: 0;
 	opacity: 0;
