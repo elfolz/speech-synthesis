@@ -8,10 +8,10 @@ function refreshPosition(x, y) {
 	let centerHeight = persona.offsetTop + (persona.clientHeight / 2) + marginBottom
 	if (x < 0) x = centerWidth
 	if (y < 0) y = centerHeight
-	let posX = (y - centerHeight) / centerHeight
-	let posY = (x - centerWidth) / centerWidth
-	document.documentElement.style.setProperty('--x-angle', `${posX * 45}deg`)
-	document.documentElement.style.setProperty('--y-angle', `${posY * 45}deg`)
+	let posX = (x - centerWidth) / centerWidth
+	let posY = (y - centerHeight) / centerHeight * -1
+	document.documentElement.style.setProperty('--x-angle', `${posY * 45}deg`)
+	document.documentElement.style.setProperty('--y-angle', `${posX * 45}deg`)
 	document.documentElement.style.setProperty('--z-angle', `${document.documentElement.clientWidth/20}px`)
 }
 document.onreadystatechange = () => {
