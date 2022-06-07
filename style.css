@@ -35,7 +35,6 @@ figure.show {
 figure img {
 	width: 100%;
 	height: auto;
-	cursor: pointer;
 	-webkit-user-drag: none;
 }
 figure:before {
@@ -49,6 +48,12 @@ figure:before {
 	will-change: width, height;
 	box-sizing: border-box;
 	z-index: 2;
+}
+figure.loading img {
+	cursor: wait;
+}
+figure:not(.loading) img {
+	cursor: help;
 }
 figure:not(.speaking) {
 	transition: opacity 500ms ease-in-out;

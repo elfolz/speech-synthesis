@@ -14,37 +14,6 @@ function refreshPosition(x, y) {
 	document.documentElement.style.setProperty('--y-angle', `${posX * 45}deg`)
 	document.documentElement.style.setProperty('--z-angle', `${document.documentElement.clientWidth/20}px`)
 }
-document.onreadystatechange = () => {
-	if (document.readyState != 'complete') return
-	let params = new URLSearchParams(location.search.substring(1))
-	if (params.get('cat')) {
-		persona.classList.add('cat')
-		persona.style.setProperty('--mouth-top', '39%')
-		persona.style.setProperty('--lips-color', '#aaa671')
-		persona.children[0].src = 'cat-body.png'
-		let nose = document.createElement('img')
-		nose.src = 'cat-nose.png'
-		nose.style.setProperty('position', 'absolute')
-		nose.style.setProperty('left', 0)
-		nose.style.setProperty('z-index', 3)
-		persona.appendChild(nose)
-		isCat = true
-	}
-	persona.classList.add('show')
-	resize()
-}
-persona.onclick = e => {
-	fetch('https://litipsum.com/api/dracula/1')
-	.then(response => {
-		return response.text()
-	})
-	.then(response => {
-		setupVoice(response)
-	})
-	.catch(error => {
-		alert(error ?? 'Error')
-	})
-}
 function resize() {
 	let size = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight) / 2
 	let mouthSize = Math.round(size * 0.08)
@@ -67,6 +36,25 @@ function setupVoice(text) {
 	synth.text = text
 	if (isCat) synth.pitch = 2
 	speechSynthesis.speak(synth)
+}
+persona.onclick = e => {
+	e.stopPropagation()
+	document.documentElement.style.setProperty('cursor', 'wait')
+	persona.classList.add('loading')
+	fetch('https://litipsum.com/api/dracula/1')
+	.then(response => {
+		return response.text()
+	})
+	.then(response => {
+		setupVoice(response)
+	})
+	.catch(error => {
+		alert(error ?? 'Error')
+	})
+	.finally(() => {
+		document.documentElement.style.removeProperty('cursor')
+		persona.classList.remove('loading')
+	})
 }
 synth.onboundary = e => {
 	let vowel = e?.utterance?.text?.substr(e?.charIndex)?.match(/[aeiou]/)
@@ -97,15 +85,12 @@ window.onpagehide = () => {
 window.onresize = () => {
 	resize()
 }
-document.onclick = () => {
+window.onclick = () => {
 	speechSynthesis.cancel()
 	persona.classList.remove('speaking')
-	if (audioEnabled) return
-	synth.text = ''
-	synth.volume = 0
-	speechSynthesis.speak(synth)
-	audioEnabled = true
-	synth.volume = 1
+}
+window.onmousemove = e => {
+	refreshPosition(e.pageX, e.pageY)
 }
 document.onmouseenter = () => {
 	persona.classList.remove('center')
@@ -113,9 +98,6 @@ document.onmouseenter = () => {
 document.onmouseleave = () => {
 	persona.classList.add('center')
 	refreshPosition(-1, -1)
-}
-document.onmousemove = e => {
-	refreshPosition(e.pageX, e.pageY)
 }
 document.ontouchstart = () => {
 	persona.classList.remove('center')
@@ -126,4 +108,31 @@ document.ontouchend = () => {
 }
 document.ontouchmove = e => {
 	refreshPosition(e.targetTouches[0].clientX, e.targetTouches[0].clientY)
+}
+document.onclick = () => {
+	if (audioEnabled) return
+	synth.text = ''
+	synth.volume = 0
+	speechSynthesis.speak(synth)
+	audioEnabled = true
+	synth.volume = 1
+}
+document.onreadystatechange = () => {
+	if (document.readyState != 'complete') return
+	let params = new URLSearchParams(location.search.substring(1))
+	if (params.get('cat')) {
+		persona.classList.add('cat')
+		persona.style.setProperty('--mouth-top', '39%')
+		persona.style.setProperty('--lips-color', '#aaa671')
+		persona.children[0].src = 'cat-body.png'
+		let nose = document.createElement('img')
+		nose.src = 'cat-nose.png'
+		nose.style.setProperty('position', 'absolute')
+		nose.style.setProperty('left', 0)
+		nose.style.setProperty('z-index', 3)
+		persona.appendChild(nose)
+		isCat = true
+	}
+	persona.classList.add('show')
+	resize()
 }
