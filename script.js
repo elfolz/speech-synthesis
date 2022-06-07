@@ -62,7 +62,7 @@ function setupVoice(text) {
 		return byName || byLocal
 	})
 	if (!voice) return setTimeout(() => setupVoice(text), 100)
-	synth.lang = synth.voice?.lang ?? 'en-US'
+	synth.lang = voice?.lang ?? 'en-US'
 	synth.voice = voice
 	synth.text = text
 	if (isCat) synth.pitch = 2
