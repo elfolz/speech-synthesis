@@ -2,6 +2,8 @@ var isCat = false
 var audioEnabled = false
 var synth = new SpeechSynthesisUtterance()
 var persona = document.querySelector('figure')
+var imgSize
+
 function refreshPosition(x, y) {
 	let centerWidth = document.documentElement.clientWidth / 2
 	let marginBottom = (document.documentElement.clientHeight - (persona.offsetTop + persona.clientHeight)) / 2
@@ -9,16 +11,20 @@ function refreshPosition(x, y) {
 	if (x < 0) x = centerWidth
 	if (y < 0) y = centerHeight
 	let posX = (x - centerWidth) / centerWidth
-	let posY = (y - centerHeight) / centerHeight * -1
-	document.documentElement.style.setProperty('--x-angle', `${posY * 45}deg`)
-	document.documentElement.style.setProperty('--y-angle', `${posX * 45}deg`)
-	document.documentElement.style.setProperty('--z-angle', `${document.documentElement.clientWidth/20}px`)
+	let posY = (y - centerHeight) / centerHeight
+	posX = posX != 0 ? posX * 30 : 0
+	posY = posY != 0 ? posY * 30 : 0
+	let perspective = imgSize
+	document.documentElement.style.setProperty('--y-angle', `${posX}deg`)
+	document.documentElement.style.setProperty('--x-angle', `${posY * -1}deg`)
+	document.documentElement.style.setProperty('--z-angle', `${posX}deg`)
+	document.documentElement.style.setProperty('--perspective', `${perspective}px`)
 }
 function resize() {
-	let size = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight) / 2
-	let mouthSize = Math.round(size * 0.08)
+	imgSize = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight) / 2
+	let mouthSize = Math.round(imgSize * 0.08)
 	if (mouthSize % 2 != 0) mouthSize++
-	document.documentElement.style.setProperty('--size', `${size}px`)
+	document.documentElement.style.setProperty('--size', `${imgSize}px`)
 	document.documentElement.style.setProperty('--mouth-size', `${mouthSize}px`)
 }
 function setupVoice(text) {
@@ -92,18 +98,10 @@ window.onclick = () => {
 window.onmousemove = e => {
 	refreshPosition(e.pageX, e.pageY)
 }
-document.onmouseenter = () => {
-	persona.classList.remove('center')
-}
 document.onmouseleave = () => {
-	persona.classList.add('center')
 	refreshPosition(-1, -1)
 }
-document.ontouchstart = () => {
-	persona.classList.remove('center')
-}
 document.ontouchend = () => {
-	persona.classList.add('center')
 	refreshPosition(-1, -1)
 }
 document.ontouchmove = e => {

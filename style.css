@@ -23,7 +23,8 @@ figure {
 	width: var(--size);
 	height: auto;
 	left: calc(50% - (var(--size) / 2));
-	transform: rotateX(var(--x-angle)) rotateY(var(--y-angle)) translateZ(var(--z-angle));
+	perspective: var(--perspective);
+	transform-style: preserve-3d;
 	filter: drop-shadow(0 0 5px rgba(0, 0, 0, .75));
 	margin: 0;
 	opacity: 0;
@@ -32,12 +33,18 @@ figure {
 figure.show {
 	opacity: 1;
 }
-figure img {
+figure span {
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	transform: rotateX(var(--x-angle)) rotateY(var(--y-angle)) rotateZ(var(--z-angle));
+}
+figure span img {
 	width: 100%;
 	height: auto;
 	-webkit-user-drag: none;
 }
-figure:before {
+figure span:before {
 	content: "";
 	display: inline-block;
 	position: absolute;
@@ -49,23 +56,20 @@ figure:before {
 	box-sizing: border-box;
 	z-index: 2;
 }
-figure.loading img {
+figure.loading span img {
 	cursor: wait;
 }
-figure:not(.loading) img {
+figure:not(.loading) span img {
 	cursor: help;
 }
-figure:not(.speaking) {
+figure:not(.speaking) span {
 	transition: opacity 500ms ease-in-out;
 	will-change: transform;
 }
-figure:not(.speaking).center {
-	transition: transform 500ms ease-in-out;
-}
-figure:not(.speaking):before {
+figure:not(.speaking) span:before {
 	transition: all 100ms;
 }
-figure:not(.a):not(.e):not(.i):not(.o):not(.u):before {
+figure:not(.a):not(.e):not(.i):not(.o):not(.u) span:before {
 	top: var(--mouth-top);
 	width: var(--mouth-size);
 	height: 2px;
@@ -73,7 +77,7 @@ figure:not(.a):not(.e):not(.i):not(.o):not(.u):before {
 	background-color: var(--lips-color);
 	left: calc(50% - calc(var(--mouth-size) / 2));
 }
-figure.a:before {
+figure.a span:before {
 	top: calc(var(--mouth-top) - calc(var(--mouth-size) * 0.75 / 2));
 	width: var(--mouth-size);
 	height: calc(var(--mouth-size) * 0.75);
@@ -82,7 +86,7 @@ figure.a:before {
 	border-bottom-left-radius: 25%;
 	border-bottom-right-radius: 25%;
 }
-figure.e:before {
+figure.e span:before {
 	top: calc(var(--mouth-top) - calc(var(--mouth-size) * 0.75 / 2));
 	width: var(--mouth-size);
 	height: calc(var(--mouth-size) * 0.75);
@@ -91,26 +95,26 @@ figure.e:before {
 	border-top-left-radius: 25%;
 	border-top-right-radius: 25%;
 }
-figure.i:before {
+figure.i span:before {
 	top: calc(var(--mouth-top) - calc(var(--mouth-size) / 4));
 	width: var(--mouth-size);
 	height: calc(var(--mouth-size) / 2);
 	border-radius: 25%;
 }
-figure.o:before {
+figure.o span:before {
 	top: calc(var(--mouth-top) - calc(var(--mouth-size) / 2));
 	width: var(--mouth-size);
 	height: var(--mouth-size);
 	border-radius: 50%;
 }
-figure.u:before {
+figure.u span:before {
 	top: calc(var(--mouth-top) - calc(var(--mouth-size) / 6));
 	left: calc(50% - calc(var(--mouth-size) / 6));
 	width: calc(var(--mouth-size) / 3);
 	height: calc(var(--mouth-size) / 3);
 	border-radius: 50%;
 }
-figure.speaking:before {
+figure.speaking span:before {
 	background-color: #fff !important;
 	animation: speaking 500ms infinite;
 }
@@ -148,12 +152,12 @@ figure.speaking:before {
 	}
 }
 @media screen and (min-width: 481px) {
-	figure:before {
+	figure span:before {
 		border-width: 4px;
 	}
 }
 @media screen and (max-width: 480px) {
-	figure:before {
+	figure span:before {
 		border-width: 2px;
 	}
 }
